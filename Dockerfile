@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install --assume-yes wget
 ##########################################################################
 
 # To bump a pandoc version, just update PANDOC_VERSION. The rest are chained to it.
-ENV PANDOC_VERSION 1.17.2
+ENV PANDOC_VERSION 1.19.2.1
 ENV PANDOC_PACKAGE pandoc-$PANDOC_VERSION-1-amd64.deb
 ENV PANDOC_URL https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$PANDOC_PACKAGE
 
