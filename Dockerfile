@@ -2,33 +2,35 @@ FROM danielak/latex-xenial:latest
 LABEL author="Brian A. Danielak"
 LABEL version="0.1"
 
-##########################################################################
+#
 # Configure Default Locale
-##########################################################################
+#
 # Set the locale for English, UTF-8
 #   see:
 #     - https://github.com/rstudio/rmarkdown/issues/383
 #     - https://github.com/rocker-org/rocker/issues/19
 #     - http://crosbymichael.com/dockerfile-best-practices-take-2.html
-RUN dpkg-reconfigure locales && \
-    locale-gen en_US.UTF-8 && \
-    /usr/sbin/update-locale LANG=en_US.UTF-8
+RUN apt-get update && apt-get install --assume-yes locales
 
-RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
-	&& locale-gen en_US.utf8 \
-	&& /usr/sbin/update-locale LANG=en_US.UTF-8
+RUN dpkg-reconfigure locales
+RUN locale-gen en_US.UTF-8
+RUN /usr/sbin/update-locale LANG=en_US.UTF-8
+
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+RUN locale-gen en_US.utf8 
+RUN /usr/sbin/update-locale LANG=en_US.UTF-8
 
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-##########################################################################
+#
 # Install wget
-##########################################################################
+#
 RUN apt-get update && apt-get install --assume-yes wget
 
-##########################################################################
+#
 # Install Pandoc - set version in ENV PANDOC_VERSION
-##########################################################################
+#
 
 # To bump a pandoc version, just update PANDOC_VERSION. The rest are chained to it.
 ENV PANDOC_VERSION 1.19.2.1
@@ -39,9 +41,9 @@ RUN mkdir pandoc && cd pandoc
 RUN wget "$PANDOC_URL"
 RUN dpkg --install $PANDOC_PACKAGE
 
-##########################################################################
+#
 # Install R-related Dependencies
-##########################################################################
+#
 
 # Add R Repository for CRAN packages
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
@@ -63,9 +65,9 @@ RUN apt-get update && apt-get install --assume-yes \
     mysql-client \
     wget
 
-##########################################################################
+#
 # Build R from Source
-##########################################################################
+#
 
 # Get Build dependencies to compile R from source
 RUN apt-get update && \
@@ -84,8 +86,8 @@ RUN wget "$CRANURL$RBRANCH$RVERSION.tar.gz" && \
     make && \
     make install
 
-##########################################################################
+#
 # App Entrypoint
-##########################################################################
+#
 WORKDIR /R-files
 ENTRYPOINT ["R", "--vanilla"]
