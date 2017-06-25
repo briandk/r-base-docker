@@ -24,28 +24,10 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 #
-# Install wget
+# Install wget and curl
 #
-RUN apt-get update && apt-get install --assume-yes wget
-
-#
-# Install Pandoc - set version in ENV PANDOC_VERSION
-#
-
-# To bump a pandoc version, just update PANDOC_VERSION. The rest are chained to it.
-ENV PANDOC_VERSION 1.19.2.1
-ENV PANDOC_PACKAGE pandoc-$PANDOC_VERSION-1-amd64.deb
-ENV PANDOC_URL https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$PANDOC_PACKAGE
-ENV PANDOC_CITEPROC_VERSION 0.10.5.1
-ENV PANDOC_CITEPROC_PACKAGE pandoc-$PANDOC_CITEPROC_VERSION-1-amd64.deb
-ENV PANDOC_CITEPROC_URL https://github.com/jgm/pandoc-citeproc/releases/download/$PANDOC_CITEPROC_VERSION/$PANDOC_CITEPROC_PACKAGE
-
-RUN mkdir pandoc && cd pandoc
-RUN wget "$PANDOC_URL"
-RUN dpkg --install $PANDOC_PACKAGE
-
-RUN wget "$PANDOC_CITEPROC_URL"
-RUN dpkg --install $PANDOC_CITEPROC_PACKAGE
+RUN apt-get update && \
+    apt-get install --assume-yes wget curl
 
 #
 # Install R-related Dependencies
